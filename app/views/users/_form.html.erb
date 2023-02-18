@@ -1,0 +1,97 @@
+<style>
+    .img-wrap {
+        position: relative;
+        display: block;
+        font-size: 0;
+        margin-right: 0;
+        width: 200px;
+    }
+
+    .close {
+        position: absolute;
+        right: 0px;
+        z-index: 100;
+        background-color: #FFF;
+        padding: 5px 2px 2px;
+        color: #000;
+        font-weight: bold;
+        cursor: pointer;
+        opacity: .2;
+        text-align: center;
+        font-size: 22px;
+        line-height: 10px;
+        border-radius: 50%;
+        margin-right: 2px;
+    }
+
+    .img-wrap:hover .close {
+        opacity: 1;
+    }
+</style>
+<%= form_with(model: user) do |form| %>
+  <% if user.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(user.errors.count, "error") %> prohibited this user from being saved:</h2>
+
+      <ul>
+        <% user.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :first_name, style: "display: block" %>
+    <%= form.text_field :first_name %>
+  </div>
+
+  <div>
+    <%= form.label :last_name, style: "display: block" %>
+    <%= form.text_field :last_name %>
+  </div>
+
+  <div>
+    <%= form.label :age, style: "display: block" %>
+    <%= form.number_field :age %>
+  </div>
+
+  <div>
+    <%= form.label :profile_picture, style: "display: block" %>
+    <%= form.file_field :user_profile_picture, onchange: "get_image_preview(event)" %>
+  </div>
+  <div id="preview" class="img-wrap"></div>
+  <br>
+  <br>
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
+<script>
+    function get_image_preview(event) {
+        var image = URL.createObjectURL(event.target.files[0]);
+        var image_div = document.getElementById('preview');
+        image_div.innerHTML = '';
+        image_div.style.display = 'inline';
+        var new_image = document.createElement('img');
+        new_image.src = image;
+        new_image.width = 200;
+        image_div.appendChild(new_image);
+        var span = document.createElement('img');
+        var close = document.createElement('span');
+        close.innerHTML = '&times;';
+        close.classList.add('close');
+        close.style.cssFloat = "right";
+        close.addEventListener('click', clickHandler);
+        image_div.appendChild(close);
+    }
+
+    function clickHandler() {
+        var logo = document.getElementById('preview');
+        logo.setAttribute("type", "hidden");
+        logo.style.display = 'none';
+        var file_upload = document.getElementById("user_user_profile_picture");
+        file_upload.value = '';
+    }
+
+</script>
